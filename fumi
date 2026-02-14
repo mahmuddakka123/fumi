@@ -3,43 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para Zara 🌌</title>
+    <title>Para Fufi & Fufu 🌌</title>
     <style>
-        body { margin: 0; overflow: hidden; background: #000; font-family: 'Courier New', Courier, monospace; }
+        body { margin: 0; overflow: hidden; background: #000; font-family: 'Georgia', serif; }
         canvas { display: block; }
         
-        /* Controles de Interfaz */
+        /* Interfaz Minimalista */
         .controls {
             position: absolute;
-            bottom: 30px;
+            bottom: 40px;
             width: 100%;
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 25px;
             z-index: 10;
         }
 
         .btn {
-            padding: 12px 25px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 12px 28px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             color: white;
             cursor: pointer;
-            backdrop-filter: blur(5px);
-            border-radius: 50px;
-            transition: 0.4s;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 12px;
+            backdrop-filter: blur(8px);
+            border-radius: 30px;
+            transition: 0.5s ease;
+            letter-spacing: 1.5px;
+            font-size: 13px;
         }
 
-        .btn:hover { background: white; color: black; box-shadow: 0 0 20px rgba(255,255,255,0.5); }
+        .btn:hover { 
+            background: rgba(255, 255, 255, 0.9); 
+            color: #000; 
+            box-shadow: 0 0 30px rgba(255,255,255,0.4);
+            transform: translateY(-3px);
+        }
 
-        /* Pantalla del Mensaje Oculto */
+        /* Pantalla del Mensaje */
         #overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: radial-gradient(circle, rgba(10,10,30,0.95) 0%, rgba(0,0,0,1) 100%);
             display: none;
             flex-direction: column;
             justify-content: center;
@@ -50,27 +54,29 @@
         }
 
         #typewriter {
-            font-size: 24px;
-            max-width: 80%;
-            line-height: 1.6;
-            margin-bottom: 30px;
+            font-size: 26px;
+            max-width: 75%;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            font-style: italic;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
         }
     </style>
 </head>
 <body>
 
     <div class="controls">
-        <button class="btn" onclick="playMusic()">🎵 Música</button>
-        <button class="btn" onclick="revealMessage()">✨ Para Zara</button>
+        <button class="btn" onclick="playMusic()">🎹 Melodía</button>
+        <button class="btn" onclick="revealMessage()">✨ Para Fufi & Fufu</button>
     </div>
 
     <div id="overlay">
         <div id="typewriter"></div>
-        <button class="btn" onclick="closeMessage()">Volver al Espacio</button>
+        <button class="btn" onclick="closeMessage()">Cerrar</button>
     </div>
 
     <audio id="bgMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
     </audio>
 
     <script type="importmap">
@@ -80,37 +86,36 @@
     <script type="module">
         import * as THREE from 'three';
 
-        // Escena y Cámara
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Estrellas
+        // Miles de estrellas parpadeantes
         const starGeo = new THREE.BufferGeometry();
         const starVertices = [];
-        for(let i=0; i<15000; i++) {
+        for(let i=0; i<12000; i++) {
             starVertices.push((Math.random()-0.5)*2000, (Math.random()-0.5)*2000, (Math.random()-0.5)*2000);
         }
         starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-        const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({color: 0xffffff, size: 0.7}));
+        const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({color: 0xffffff, size: 0.8, transparent: true, opacity: 0.8}));
         scene.add(stars);
 
-        // Sol (El centro de Zara)
+        // Sol Cálido (Fufi/Fufu)
         const sun = new THREE.Mesh(
-            new THREE.SphereGeometry(4, 32, 32),
-            new THREE.MeshBasicMaterial({ color: 0xffd700 })
+            new THREE.SphereGeometry(5, 64, 64),
+            new THREE.MeshBasicMaterial({ color: 0xfff3e0 }) 
         );
         scene.add(sun);
 
-        // Planetas
+        // Planetas con colores pastel
         const planets = [];
         const createPlanet = (size, color, dist, speed) => {
             const container = new THREE.Object3D();
             const planet = new THREE.Mesh(
                 new THREE.SphereGeometry(size, 32, 32),
-                new THREE.MeshStandardMaterial({ color: color, roughness: 0.5 })
+                new THREE.MeshStandardMaterial({ color: color, roughness: 0.7 })
             );
             planet.position.x = dist;
             container.add(planet);
@@ -118,53 +123,59 @@
             planets.push({ container, speed });
         };
 
-        createPlanet(1, 0x44aaff, 12, 0.01);  // Azul
-        createPlanet(0.8, 0xff7733, 20, 0.008); // Naranja
-        createPlanet(1.5, 0xcc88ff, 30, 0.005); // Púrpura
+        createPlanet(0.8, 0xadb5bd, 14, 0.007); // Mercurio-like
+        createPlanet(1.2, 0xd8e2dc, 22, 0.005); // Suave
+        createPlanet(1.5, 0xffcad4, 32, 0.003); // Rosa pastel
+        createPlanet(2.0, 0xf4acb7, 45, 0.002); // Rosado profundo
 
-        const light = new THREE.PointLight(0xffffff, 500, 100);
+        const light = new THREE.PointLight(0xffffff, 800, 150);
         scene.add(light);
-        scene.add(new THREE.AmbientLight(0x404040));
+        scene.add(new THREE.AmbientLight(0x222222));
 
-        camera.position.z = 50;
-        camera.position.y = 15;
+        camera.position.z = 60;
+        camera.position.y = 25;
         camera.lookAt(0,0,0);
 
         function animate() {
             requestAnimationFrame(animate);
-            sun.rotation.y += 0.002;
+            sun.rotation.y += 0.001;
             planets.forEach(p => p.container.rotation.y += p.speed);
-            stars.rotation.y += 0.0002;
+            stars.rotation.y += 0.0001;
             renderer.render(scene, camera);
         }
         animate();
 
-        // Lógica del Mensaje
-        const messageText = "Zara, eres como una estrella: a veces no te veo, pero sé que siempre estás ahí iluminando mi mundo. Eres mi universo entero. ✨";
+        // Lógica del Mensaje Personalizado
+        const messageText = "Para Fufi & Fufu... \n\nEn este inmenso sistema solar, tú eres el sol que ilumina cada uno de mis días. No importa qué tan lejos orbiten los planetas, mi mundo siempre girará en torno a ti. ✨";
         let i = 0;
 
         window.revealMessage = () => {
             document.getElementById('overlay').style.display = 'flex';
-            typeWriter();
+            if (i === 0) typeWriter();
         };
 
         window.closeMessage = () => {
             document.getElementById('overlay').style.display = 'none';
-            document.getElementById('typewriter').innerHTML = "";
-            i = 0;
         };
 
         function typeWriter() {
             if (i < messageText.length) {
-                document.getElementById('typewriter').innerHTML += messageText.charAt(i);
+                const char = messageText.charAt(i);
+                document.getElementById('typewriter').innerHTML += char === "\n" ? "<br>" : char;
                 i++;
-                setTimeout(typeWriter, 50);
+                setTimeout(typeWriter, 60);
             }
         }
 
         window.playMusic = () => {
             const audio = document.getElementById('bgMusic');
-            audio.paused ? audio.play() : audio.pause();
+            if (audio.paused) {
+                audio.play();
+                document.querySelector('.btn').innerHTML = "⏸ Pausar";
+            } else {
+                audio.pause();
+                document.querySelector('.btn').innerHTML = "🎹 Melodía";
+            }
         };
 
         window.addEventListener('resize', () => {
