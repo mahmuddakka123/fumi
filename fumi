@@ -3,214 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Universo de Fufu, Fufi y Waffa</title>
+    <title>Para Zara 🌌</title>
     <style>
-        /* ESTÉTICA WES ANDERSON */
-        :root {
-            --bg-color: #fce4ec; /* Rosa pastel suave */
-            --orbit-color: rgba(0, 0, 0, 0.1);
-            --text-color: #4a4a4a;
-            --fufu-color: #f4b2b0;
-            --fufi-color: #97cbdc;
-            --waffa-color: #f1d592;
-            --accent: #d4a373;
-        }
-
-        body, html {
-            margin: 0;
-            padding: 0;
+        body { margin: 0; overflow: hidden; background: #000; font-family: 'Courier New', Courier, monospace; }
+        canvas { display: block; }
+        
+        /* Controles de Interfaz */
+        .controls {
+            position: absolute;
+            bottom: 30px;
             width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: var(--bg-color);
-            font-family: 'Courier New', Courier, monospace; /* Tipografía tipo guion de cine */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-color);
-        }
-
-        h1 {
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            font-size: 1.5rem;
-            margin-bottom: 50px;
-            border-bottom: 2px solid var(--text-color);
-            padding-bottom: 10px;
-        }
-
-        /* SISTEMA SOLAR SIMÉTRICO */
-        .solar-system {
-            position: relative;
-            width: 500px;
-            height: 500px;
             display: flex;
             justify-content: center;
-            align-items: center;
-        }
-
-        .sun {
-            width: 60px;
-            height: 60px;
-            background-color: #ffb703;
-            border-radius: 50%;
-            box-shadow: 0 0 30px rgba(255, 183, 3, 0.5);
+            gap: 20px;
             z-index: 10;
-            border: 3px solid white;
         }
 
-        .orbit {
-            position: absolute;
-            border: 1px solid var(--orbit-color);
-            border-radius: 50%;
-        }
-
-        .planet {
-            position: absolute;
-            border-radius: 50%;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 2px solid white;
-        }
-
-        .label {
-            position: absolute;
-            top: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.7rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Planetas y Animaciones */
-        .fufu-orbit { width: 180px; height: 180px; animation: rotate 8s linear infinite; }
-        .fufu { width: 20px; height: 20px; background-color: var(--fufu-color); }
-
-        .fufi-orbit { width: 300px; height: 300px; animation: rotate 12s linear infinite; }
-        .fufi { width: 25px; height: 25px; background-color: var(--fufi-color); }
-
-        .waffa-orbit { width: 420px; height: 420px; animation: rotate 18s linear infinite; }
-        .waffa { width: 22px; height: 22px; background-color: var(--waffa-color); }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* BOTÓN DE REDIRECT ESTILO ANDERSON */
-        .btn-container {
-            margin-top: 50px;
-            z-index: 20;
-        }
-
-        .anderson-btn {
-            background: transparent;
-            border: 2px solid var(--text-color);
-            padding: 10px 25px;
-            cursor: pointer;
-            font-family: inherit;
-            font-weight: bold;
-            letter-spacing: 2px;
-            transition: all 0.4s;
-        }
-
-        .anderson-btn:hover {
-            background-color: var(--text-color);
+        .btn {
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.4);
             color: white;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            border-radius: 50px;
+            transition: 0.4s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 12px;
         }
 
-        /* CORTINA DE REDIRECCIÓN */
-        #redirect-overlay {
+        .btn:hover { background: white; color: black; box-shadow: 0 0 20px rgba(255,255,255,0.5); }
+
+        /* Pantalla del Mensaje Oculto */
+        #overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--accent);
-            display: flex;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
-            transform: translateY(100%);
-            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
-        }
-
-        #redirect-overlay.active {
-            transform: translateY(0);
-        }
-
-        .overlay-text {
+            z-index: 100;
             color: white;
-            font-size: 1.5rem;
-            letter-spacing: 8px;
-            text-transform: uppercase;
+            text-align: center;
+        }
+
+        #typewriter {
+            font-size: 24px;
+            max-width: 80%;
+            line-height: 1.6;
+            margin-bottom: 30px;
         }
     </style>
 </head>
 <body>
 
-    <audio id="miMusica" loop>
-        <source src="musica.mp3" type="audio/mpeg">
+    <div class="controls">
+        <button class="btn" onclick="playMusic()">🎵 Música</button>
+        <button class="btn" onclick="revealMessage()">✨ Para Zara</button>
+    </div>
+
+    <div id="overlay">
+        <div id="typewriter"></div>
+        <button class="btn" onclick="closeMessage()">Volver al Espacio</button>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
     </audio>
 
-    <h1>Mis Tres Soles</h1>
+    <script type="importmap">
+        { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+    </script>
 
-    <div class="solar-system">
-        <div class="sun"></div>
+    <script type="module">
+        import * as THREE from 'three';
 
-        <div class="orbit fufu-orbit">
-            <div class="planet fufu">
-                <span class="label">Fufu</span>
-            </div>
-        </div>
+        // Escena y Cámara
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
 
-        <div class="orbit fufi-orbit">
-            <div class="planet fufi">
-                <span class="label">Fufi</span>
-            </div>
-        </div>
-
-        <div class="orbit waffa-orbit">
-            <div class="planet waffa">
-                <span class="label">Waffa</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="btn-container">
-        <button class="anderson-btn" onclick="iniciarRedirect()">VER NUESTRO DESTINO</button>
-    </div>
-
-    <div id="redirect-overlay">
-        <div class="overlay-text">Cambiando de Escena...</div>
-    </div>
-
-    <script>
-        // Intentar reproducir música al primer clic (los navegadores bloquean audio automático)
-        document.body.addEventListener('click', function() {
-            const audio = document.getElementById('miMusica');
-            if (audio.paused) {
-                audio.play();
-                audio.volume = 0.5;
-            }
-        }, { once: true });
-
-        function iniciarRedirect() {
-            const overlay = document.getElementById('redirect-overlay');
-            overlay.classList.add('active');
-
-            // AQUÍ PONES EL LINK A DONDE QUIERES MANDARLA (EJ: WhatsApp, Instagram o un Video)
-            const destinoURL = "https://www.google.com"; 
-
-            setTimeout(() => {
-                window.location.href = destinoURL;
-            }, 1200);
+        // Estrellas
+        const starGeo = new THREE.BufferGeometry();
+        const starVertices = [];
+        for(let i=0; i<15000; i++) {
+            starVertices.push((Math.random()-0.5)*2000, (Math.random()-0.5)*2000, (Math.random()-0.5)*2000);
         }
+        starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+        const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({color: 0xffffff, size: 0.7}));
+        scene.add(stars);
+
+        // Sol (El centro de Zara)
+        const sun = new THREE.Mesh(
+            new THREE.SphereGeometry(4, 32, 32),
+            new THREE.MeshBasicMaterial({ color: 0xffd700 })
+        );
+        scene.add(sun);
+
+        // Planetas
+        const planets = [];
+        const createPlanet = (size, color, dist, speed) => {
+            const container = new THREE.Object3D();
+            const planet = new THREE.Mesh(
+                new THREE.SphereGeometry(size, 32, 32),
+                new THREE.MeshStandardMaterial({ color: color, roughness: 0.5 })
+            );
+            planet.position.x = dist;
+            container.add(planet);
+            scene.add(container);
+            planets.push({ container, speed });
+        };
+
+        createPlanet(1, 0x44aaff, 12, 0.01);  // Azul
+        createPlanet(0.8, 0xff7733, 20, 0.008); // Naranja
+        createPlanet(1.5, 0xcc88ff, 30, 0.005); // Púrpura
+
+        const light = new THREE.PointLight(0xffffff, 500, 100);
+        scene.add(light);
+        scene.add(new THREE.AmbientLight(0x404040));
+
+        camera.position.z = 50;
+        camera.position.y = 15;
+        camera.lookAt(0,0,0);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            sun.rotation.y += 0.002;
+            planets.forEach(p => p.container.rotation.y += p.speed);
+            stars.rotation.y += 0.0002;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Lógica del Mensaje
+        const messageText = "Zara, eres como una estrella: a veces no te veo, pero sé que siempre estás ahí iluminando mi mundo. Eres mi universo entero. ✨";
+        let i = 0;
+
+        window.revealMessage = () => {
+            document.getElementById('overlay').style.display = 'flex';
+            typeWriter();
+        };
+
+        window.closeMessage = () => {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('typewriter').innerHTML = "";
+            i = 0;
+        };
+
+        function typeWriter() {
+            if (i < messageText.length) {
+                document.getElementById('typewriter').innerHTML += messageText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 50);
+            }
+        }
+
+        window.playMusic = () => {
+            const audio = document.getElementById('bgMusic');
+            audio.paused ? audio.play() : audio.pause();
+        };
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
     </script>
 </body>
 </html>
-
